@@ -1,0 +1,56 @@
+{
+  "info": {
+    "_postman_id": "c85a4c56-3b60-49bc-bd75-d94aab0d3e66",
+    "name": "EventFlow API",
+    "description": "Fluxo local e fictício do EventFlow. Execute List events antes de Create reservation.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "apiUrl", "value": "http://localhost:5080" },
+    { "key": "schedulerUrl", "value": "http://localhost:5081" },
+    { "key": "eventId", "value": "" },
+    { "key": "reservationId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": { "method": "GET", "url": "{{apiUrl}}/health" }
+    },
+    {
+      "name": "List events",
+      "event": [{
+        "listen": "test",
+        "script": { "exec": ["const events = pm.response.json();", "if (events.length) pm.collectionVariables.set('eventId', events[0].id);"] }
+      }],
+      "request": { "method": "GET", "url": "{{apiUrl}}/api/events" }
+    },
+    {
+      "name": "Create reservation",
+      "event": [{
+        "listen": "test",
+        "script": { "exec": ["const reservation = pm.response.json();", "pm.collectionVariables.set('reservationId', reservation.id);"] }
+      }],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"eventId\": \"{{eventId}}\",\n  \"customerEmail\": \"portfolio@example.com\",\n  \"quantity\": 2\n}"
+        },
+        "url": "{{apiUrl}}/api/reservations"
+      }
+    },
+    {
+      "name": "Dispatch outbox now",
+      "request": { "method": "POST", "url": "{{schedulerUrl}}/jobs/dispatch" }
+    },
+    {
+      "name": "Get reservation",
+      "request": { "method": "GET", "url": "{{apiUrl}}/api/reservations/{{reservationId}}" }
+    },
+    {
+      "name": "Cancel reservation",
+      "request": { "method": "DELETE", "url": "{{apiUrl}}/api/reservations/{{reservationId}}" }
+    }
+  ]
+}

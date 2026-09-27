@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/EventFlow.Domain/EventFlow.Domain.csproj" />
+    <Project Path="src/EventFlow.Application/EventFlow.Application.csproj" />
+    <Project Path="src/EventFlow.Infrastructure/EventFlow.Infrastructure.csproj" />
+    <Project Path="src/EventFlow.Api/EventFlow.Api.csproj" />
+    <Project Path="src/EventFlow.Scheduler/EventFlow.Scheduler.csproj" />
+    <Project Path="src/EventFlow.Worker/EventFlow.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/EventFlow.Tests/EventFlow.Tests.csproj" />
+  </Folder>
+</Solution>

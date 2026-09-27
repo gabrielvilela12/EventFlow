@@ -1,0 +1,20 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: eventflow-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-eventflow}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-eventflow-local}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - eventflow-rabbit:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  eventflow-rabbit:
